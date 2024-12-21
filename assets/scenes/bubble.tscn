@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://cicup5t1het23"]
+
+[ext_resource type="Script" path="res://assets/scripts/bubble.gd" id="1_08w2r"]
+[ext_resource type="PackedScene" uid="uid://dulqr3ja37s5x" path="res://assets/scenes/bubble_control.tscn" id="2_k2bcx"]
+
+[node name="Window" type="Window"]
+auto_translate_mode = 1
+transparent_bg = true
+initial_position = 2
+borderless = true
+always_on_top = true
+transparent = true
+mouse_passthrough = true
+script = ExtResource("1_08w2r")
+
+[node name="MarginContainer" parent="." instance=ExtResource("2_k2bcx")]
