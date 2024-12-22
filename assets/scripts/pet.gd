@@ -39,10 +39,9 @@ func _ready():
 	MainWindow.size = MainWindow.min_size
 	update_pet_pos(Vector2i(DisplayServer.screen_get_size().x/2 - (pet_size.x/2), taskbar_pos))
 	
-	pet_state = rng.rand_weighted(weights)
-	if pet_state == STATE.WALK:
-		set_looking_right(randi() % 2)
+	select_state()
 	update_animation()
+	update_timer()
 	get_tree().create_timer(randf_range(0,500)).connect("timeout", _on_dialog_timeout)
 	
 func _on_dialog_timeout():
@@ -71,10 +70,15 @@ func _process(delta: float) -> void:
 
 
 func _on_timer_timeout():
+	select_state()
+	update_animation()
+	update_timer()
+
+
+func select_state():
 	pet_state = rng.rand_weighted(weights)
 	if pet_state == STATE.WALK:
 		set_looking_right(randi() % 2)
-	update_animation()
 
 
 func update_pet_pos(pp: Vector2):
@@ -102,7 +106,8 @@ var selected: bool = false
 var mouse_offset: Vector2 = Vector2.ZERO
 func follow_mouse():
 	update_pet_pos(Vector2(clampf((get_global_mouse_position().x  + mouse_offset.x), 0, screen_width - pet_size.x), get_global_mouse_position().y + mouse_offset.y))
-	
+
+
 func check_selected():
 	if Input.is_action_pressed("move"):
 		selected = true
@@ -111,26 +116,37 @@ func check_selected():
 		selected = false
 
 
-func update_animation():
+func update_timer():
 	match pet_state:
 		STATE.IDLE:
 			get_tree().create_timer(randi_range(5, 20)).connect("timeout", _on_timer_timeout)
-			Sprite.play("idle")
 		STATE.LOOKAROUND:
 			get_tree().create_timer(randi_range(1, 3)).connect("timeout", _on_timer_timeout)
-			Sprite.play("look_around")
 		STATE.WALK:
 			get_tree().create_timer(randi_range(6, 30)).connect("timeout", _on_timer_timeout)
-			Sprite.play("walk")
 		STATE.SLEEP:
 			get_tree().create_timer(randi_range(60, 360)).connect("timeout", _on_timer_timeout)
-			Sprite.play("sleep")
 		STATE.SCARE:
 			get_tree().create_timer(randi_range(3, 10)).connect("timeout", _on_timer_timeout)
-			Sprite.play("scare")
 		STATE.JUMP:
 			get_tree().create_timer(randi_range(2, 2)).connect("timeout", _on_timer_timeout)
-			Sprite.play("jump")
 		STATE.SLIP:
 			get_tree().create_timer(randi_range(3, 10)).connect("timeout", _on_timer_timeout)
+
+
+func update_animation():
+	match pet_state:
+		STATE.IDLE:
+			Sprite.play("idle")
+		STATE.LOOKAROUND:
+			Sprite.play("look_around")
+		STATE.WALK:
+			Sprite.play("walk")
+		STATE.SLEEP:
+			Sprite.play("sleep")
+		STATE.SCARE:
+			Sprite.play("scare")
+		STATE.JUMP:
+			Sprite.play("jump")
+		STATE.SLIP:
 			Sprite.play("slip")
