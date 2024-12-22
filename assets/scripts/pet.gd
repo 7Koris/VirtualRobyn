@@ -9,7 +9,7 @@ static var rng = RandomNumberGenerator.new()
 static var states = [STATE.IDLE, STATE.LOOKAROUND, STATE.WALK, STATE.SLEEP, STATE.SCARE, STATE.JUMP, STATE.SLIP]
 static var weights = [1, 0.3, 1, 0.1, 0.1, 0.1, 0.1]
 
-const WALK_SPEED = 150 # * SPEED_SCALE
+const WALK_SPEED = 150# * SPEED_SCALE
 var pet_state : int = STATE.IDLE
 var _looking_right: bool = false
 var walk_direction: int = -1 # -1 for left
@@ -40,11 +40,13 @@ func _ready():
 	if pet_state == STATE.WALK:
 		set_looking_right(randi() % 2)
 	update_animation()
-	get_tree().create_timer(randf_range(0,120)).connect("timeout", _on_dialog_timeout)
+	get_tree().create_timer(randf_range(0,500)).connect("timeout", _on_dialog_timeout)
 	
 	
 func _on_dialog_timeout():
 	add_child(dialog.instantiate())
+	get_tree().create_timer(randf_range(0,500)).connect("timeout", _on_dialog_timeout)
+	
 
 func _process(delta: float) -> void:
 	if selected:
