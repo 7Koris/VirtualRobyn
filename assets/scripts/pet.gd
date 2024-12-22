@@ -32,6 +32,9 @@ enum STATE{
 }
 
 func _ready():
+	Engine.max_fps = 60
+	PhysicsServer3D.set_active(false)
+	PhysicsServer2D.set_active(false)
 	MainWindow.min_size = pet_size
 	MainWindow.size = MainWindow.min_size
 	update_pet_pos(Vector2i(DisplayServer.screen_get_size().x/2 - (pet_size.x/2), taskbar_pos))
@@ -41,7 +44,6 @@ func _ready():
 		set_looking_right(randi() % 2)
 	update_animation()
 	get_tree().create_timer(randf_range(0,500)).connect("timeout", _on_dialog_timeout)
-	
 	
 func _on_dialog_timeout():
 	add_child(dialog.instantiate())
